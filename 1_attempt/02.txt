@@ -1,0 +1,8 @@
+ oc adm policy add cluster-role-to-group cluster-admin admins
+ oc adm policy add-cluster-role-to-group cluster-admin admins
+ oc adm policy add-role-to-group edit developers
+ oc adm policy add-role-to-group view  developers
+ oc adm policy add-role-to-group view viewers
+ oc new-project test-namespace
+ oc adm policy add-role-to-user view anouk -n test-namespace
+ oc adm policy add-role-to-user edit anouk -n test-namespace

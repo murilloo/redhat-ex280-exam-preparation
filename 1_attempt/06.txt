@@ -1,0 +1,12 @@
+oc create cm nginxconfigmap --from-file default.conf
+oc create sa linginx-sa
+oc adm policy add-scc-to-user anyuid -z linginx-sa
+oc login -u admin -p password
+oc adm policy add-scc-to-user anyuid -z linginx-sa
+oc login -u developer https://api.crc.testing:6443
+oc create -f linginx-v2.yaml
+oc get all
+oc create route passthrough linginx --service linginx2 --port 8443 --hostname=linginx-default.app-crc.testing
+oc get routes
+oc get svc
+oc get pods

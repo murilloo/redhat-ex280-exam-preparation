@@ -1,0 +1,14 @@
+oc whoami
+oc login -u developer https://api.crc.testing:6443
+oc whoami
+oc new-project microservices
+oc create secret generic mysql --from-literal=password=mypassword
+oc new-app --name mysql --docker-image mysql
+oc set env deployment mysql --prefix MYSQL_ROOT_ --from secret/mysql
+oc set volumes deployment mysql --name mysql-pvc --add --type pvc --claim-size 1Gi --claim-mode rwo --mount-path /mnt
+oc login -u admin -p password
+oc get nodes
+oc label nodes crc-x4qnm-master-0 role=master
+oc get nodes
+oc edit deployment
+oc get pods

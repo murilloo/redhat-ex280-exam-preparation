@@ -22,7 +22,7 @@ spec:
   identityProviders:
   - htpasswd:
       fileData:
-        name: htpass-secret
+        name: htpasswd-secret
     mappingMethod: claim
     name: developer
     type: HTPasswd

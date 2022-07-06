@@ -1,0 +1,3 @@
+oc project
+oc new-project my-project
+oc new-app --docker-image=sandervanvugt/openshift:latest --name secure-app

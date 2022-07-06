@@ -1,0 +1,26 @@
+ htpasswd -c -b -B htpasswd admin password
+ htpasswd -b -B htpasswd anna password
+ htpasswd -b -B htpasswd anouk password
+ htpasswd -b -B htpasswd developer password
+ htpasswd -b -B htpasswd lisa password
+ htpasswd -b -B htpasswd linda password
+ 
+ oc login -u kubeadmin -p ivF55-PUjaB-5MWDc-yhDsU https://api.crc.testing:6443
+ oc create secret generic htpass-users --from-file htpasswd=/Users/ol65ia/ex280/htpasswd -n openshift-config
+ oc get oauth cluster -o yaml > oauth.yml
+ vi oauth.yml
+ oc replace -f oauth.yml 
+ 
+oc adm policy add-cluster-role-to-user cluster-admin admin
+oc login -u admin -p password
+
+oc adm groups new admins
+oc adm groups new developers
+oc adm groups new viewers
+oc adm groups add-users admins admin
+oc adm groups add-users admins anna
+oc adm groups add-users developers developer
+oc adm groups add-users developers linda
+oc adm groups add-users viewers lisa
+
+
