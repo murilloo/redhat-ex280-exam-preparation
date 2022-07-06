@@ -1,0 +1,45 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: lab4-pv
+spec:
+  storageClassName: lab4
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/lab4"
+...
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: lab4-pvc
+spec:
+  storageClassName: lab4
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+...
+---
+kind: Pod
+apiVersion: v1
+metadata:
+   name: lab4pod
+spec:
+  volumes:
+    - name: pv-storage
+      persistentVolumeClaim:
+        claimName: lab4-pvc
+  containers:
+    - name: lab4-container
+      image: bitnami/nginx
+      ports:
+        - containerPort: 8080
+          name: nginx
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: pv-storage

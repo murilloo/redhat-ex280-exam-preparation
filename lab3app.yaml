@@ -1,0 +1,93 @@
+apiVersion: v1
+items:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: lab3app
+      app.kubernetes.io/component: lab3app
+      app.kubernetes.io/instance: lab3app
+    name: lab3app
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations:
+        openshift.io/imported-from: bitnami/nginx
+      from:
+        kind: DockerImage
+        name: bitnami/nginx
+      generation: null
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"lab3app:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"lab3app\")].image"}]'
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: lab3app
+      app.kubernetes.io/component: lab3app
+      app.kubernetes.io/instance: lab3app
+    name: lab3app
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        deployment: lab3app
+    strategy: {}
+    template:
+      metadata:
+        annotations:
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          deployment: lab3app
+      spec:
+        containers:
+        - image: ' '
+          name: lab3app
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          - containerPort: 8443
+            protocol: TCP
+          resources: {}
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: lab3app
+      app.kubernetes.io/component: lab3app
+      app.kubernetes.io/instance: lab3app
+    name: lab3app
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: 8443-tcp
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
+    selector:
+      deployment: lab3app
+  status:
+    loadBalancer: {}
+kind: List
+metadata: {}
+
