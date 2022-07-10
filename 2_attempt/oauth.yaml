@@ -22,10 +22,13 @@ spec:
   identityProviders:
   - htpasswd:
       fileData:
-        name: localusers
+        name: htpass-users
     mappingMethod: claim
     name: developer
     type: HTPasswd
+    htpasswd:
+      fileData:
+        name: htpass-users
   templates:
     login:
       name: login-template

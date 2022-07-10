@@ -1,0 +1,55 @@
+# RHEL - Install htpasswd
+yum install -y httpd-tools
+
+# Login
+oc whoami
+oc login -u kubeadmin -p u9BN7-CPyus-Y88YD-V6Sym https://api.crc.testing:6443
+
+# Creating users
+htpasswd -c -b -B /tmp/htpasswd admin password
+htpasswd -b -B /tmp/htpasswd anna password
+htpasswd -b -B /tmp/htpasswd linda password
+htpasswd -b -B /tmp/htpasswd anouk password
+
+# Create secret from file
+oc create secret generic htpass-users --from-file htpasswd=/tmp/htpasswd -n openshift-config
+
+# Add user admin as cluster admin
+oc adm policy add-cluster-role-to-user cluster-admin admin
+
+# Get oauth current config
+oc get oauth cluster -o yaml > oauth.yaml
+
+# Make sure spec under identityProviders matchs with the secret created before
+# spec:
+#  identityProviders:
+#  - htpasswd:
+#      fileData:
+#        name: htpass-users
+#    mappingMethod: claim
+#    name: developer
+#    type: HTPasswd
+#    htpasswd:
+#      fileData:
+#        name: htpass-users
+
+
+# Replace config
+oc replace -f oauth.yaml
+
+# Login as new admin
+oc login -u password -p password
+
+# Delete kubeadmin user
+oc delete user kubeadmin
+
+# Creating groups
+oc adm groups new admins
+oc adm groups new developers
+oc adm groups new viewers 
+
+# Adding users to groups
+oc adm groups add-users admins admin
+oc adm groups add-users developers linda
+oc adm groups add-users developers developer
+oc adm groups add-users viewers lisa

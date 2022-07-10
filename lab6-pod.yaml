@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lab6-pod
+spec:
+  serviceAccountName: lab6-sa
+  containers:
+  - name: nginx
+    image: nginx
