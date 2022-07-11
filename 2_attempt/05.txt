@@ -1,0 +1,11 @@
+# Create a new project
+oc new-project my-project
+
+# Create a new app
+oc new-app --name=secure-app --image=sandervanvugt/openshift:latest
+
+# Create secret with certificate
+oc create secret tls secure-app-tls --cert ./certs/tls.crt --key ./certs/tls.key
+
+# Mount the volume to the pod
+oc set volumes deployment/secure-app --add --type secret --secret-name secure-app-tls --mount-path /run/secrets/nginx 

@@ -1,0 +1,29 @@
+# Access microservices project
+oc project microservices
+
+# Create new app
+oc new-app --name=wordpress --image=wordpress
+
+# Create service account
+oc create sa wordpress-sa
+
+# Change to admin
+oc login -u admin -p password
+
+# Add policy to sa acccount
+oc adm policy add-scc-to-user anyuid -z wordpress-sa
+
+# Back to developer
+oc login -u developer https://api.crc.testing:6443
+
+# Set service account for deployment of wordpress 
+oc set serviceaccount deployment wordpress wordpress-sa
+
+# Expose wordpress service
+oc expose svc wordpress
+
+# Create ConfigMap with variables
+oc create cm wordpress-cm --from-literal=host=mysql --from-literal=name=wordpress --from-literal=user=root --from-literal=password=password
+
+# Set variables to deployment
+oc set env deployment wordpress --prefix WORDPRESS_DB_ --from configmap/wordpress-cm 

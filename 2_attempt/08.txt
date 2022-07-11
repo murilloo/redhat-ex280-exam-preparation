@@ -1,0 +1,35 @@
+# Login as developer
+oc login -u developer https://api.crc.testing:6443
+
+# Create new project
+oc new-project microservices
+
+# Create secret
+oc create secret generic mysql --from-literal=password=mypassword
+
+# Create MySQL App
+oc new-app --name mysql --image=mysql
+
+# Set variable from secret
+oc set env deployment mysql --prefix MYSQL_ROOT_ --from secret/mysql
+
+# Set volume mount point
+oc set volumes deployment mysql --name mysql-pvc --add --type pvc --claim-size 1Gi --claim-mode rwo --mount-path /mnt
+
+# Set label
+oc login -u admin -p password
+oc label nodes crc-x4qnm-master-0 role=master
+
+# Edit deployment
+oc edit deployment
+
+# Make sure to add
+#
+#  ... after dnspolicy
+#
+#  nodeSelector:
+#    role: master
+#
+
+# Verify is everything is running
+oc get pods

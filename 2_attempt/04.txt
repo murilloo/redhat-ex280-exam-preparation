@@ -1,0 +1,4 @@
+
+oc login -u developer https://api.crc.testing:6443
+oc new-project local-project
+oc describe project local-project
