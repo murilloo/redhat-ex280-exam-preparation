@@ -41,8 +41,9 @@ oc replace -f oauth.yaml
 oc login -u password -p password
 
 # Delete kubeadmin user
-oc delete user kubeadmin
-
+oc delete user kubeadmin #CRC
+oc delete secrets kubeadmin -n kube-system #OCP4
+ 
 # Creating groups
 oc adm groups new admins
 oc adm groups new developers
