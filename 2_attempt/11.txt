@@ -1,0 +1,3 @@
+# Patch
+oc patch routes.route.openshift.io bitnami -p '{"spec":{"host":"test.exameple.com"}}'
+
