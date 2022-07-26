@@ -16,3 +16,7 @@ oc create route edge linginx1 --service linginx1 --key certs/tls.key  --cert cer
 # NodeSelector with Annotation
 oc annotate namespace <NS> openshift.io/node-selector="test" --overwrite
 
+# Resource quota per container
+oc create deploy bitnami --image=bitnami/nginx --replicas=3
+oc set resources deployment bitnami -c=nginx --requests cpu=10m,memory=10Mi --limits cpu=100m,memory=120Mi
+
