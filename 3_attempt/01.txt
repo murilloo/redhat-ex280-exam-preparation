@@ -1,3 +1,8 @@
+# RBAC
+oc adm policy remove-cluster-role-from-group self-provisioner system:authenticated:oauth
+oc adm policy add-cluster-role-to-group --rolebinding-name self-provisioners self-provisioner system:authenticated:oauth
+oc describe clusterrolebindings self-provisioners
+
 # Create OpenSSL certs
 openssl genrsa -des3 -out myCA.key 2048
 openssl req -x509 -new -nodes -key myCA.key -sha256 -days 3650 -out myCA.pem
@@ -10,3 +15,4 @@ oc create route edge linginx1 --service linginx1 --key certs/tls.key  --cert cer
 
 # NodeSelector with Annotation
 oc annotate namespace <NS> openshift.io/node-selector="test" --overwrite
+
