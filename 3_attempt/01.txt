@@ -1,0 +1,12 @@
+# Create OpenSSL certs
+openssl genrsa -des3 -out myCA.key 2048
+openssl req -x509 -new -nodes -key myCA.key -sha256 -days 3650 -out myCA.pem
+openssl genrsa -out tls.key 2048
+openssl req -new -key tls.key -out tls.csr
+openssl x509 -req -in tls.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial -out tls.crt -days 1650  -sha256
+
+# Create Secure route
+oc create route edge linginx1 --service linginx1 --key certs/tls.key  --cert certs/tls.crt  --ca-cert certs/myCA.pem
+
+# NodeSelector with Annotation
+oc annotate namespace <NS> openshift.io/node-selector="test" --overwrite
