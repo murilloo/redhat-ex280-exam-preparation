@@ -10,6 +10,10 @@ openssl genrsa -out tls.key 2048
 openssl req -new -key tls.key -out tls.csr
 openssl x509 -req -in tls.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial -out tls.crt -days 1650  -sha256
 
+# Create secret with keys/certs
+oc create secret tls linginx-certs --key tls.key --cert tls.crt
+oc get secrets linginx-certs -o yaml
+
 # Create Secure route
 oc create route edge linginx1 --service linginx1 --key certs/tls.key  --cert certs/tls.crt  --ca-cert certs/myCA.pem
 oc create route passthrough linginx --service linginx2 --port 8443 
