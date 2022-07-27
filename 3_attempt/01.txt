@@ -12,6 +12,7 @@ openssl x509 -req -in tls.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial -out 
 
 # Create Secure route
 oc create route edge linginx1 --service linginx1 --key certs/tls.key  --cert certs/tls.crt  --ca-cert certs/myCA.pem
+oc create route passthrough linginx --service linginx2 --port 8443 
 
 # NodeSelector with Annotation
 oc annotate namespace <NS> openshift.io/node-selector="test" --overwrite
