@@ -14,6 +14,10 @@ openssl x509 -req -in tls.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial -out 
 oc create secret tls linginx-certs --key tls.key --cert tls.crt
 oc get secrets linginx-certs -o yaml
 
+# Setting mount points
+oc set volumes deploy nginx --add --type configmap --configmap-name nginx-conf  --mount-path /etc/nginx/conf.d
+oc set volumes deploy nginx --add --type secret --secret-name nginx-certs --mount-path /etc/nginx/ssl 
+  
 # Create Secure route
 oc create route edge linginx1 --service linginx1 --key certs/tls.key  --cert certs/tls.crt  --ca-cert certs/myCA.pem
 oc create route passthrough linginx --service linginx2 --port 8443 
@@ -27,3 +31,8 @@ oc autoscale deploy nginx --min 1 --max 5 --cpu-percent 70
 oc set resources deploy nginx --requests cpu=10m,memory=20Mi --limits cpu=80m,memory=100Mi
 oc set resources deploy nginx -c=nginx --requests cpu=10m,memory=10Mi --limits cpu=100m,memory=120Mi
 
+# Remove label env in the nodes that have it
+oc label node -l env env-
+
+# Recursive mode on  oc explain
+oc explain  deployment.spec --recursive
