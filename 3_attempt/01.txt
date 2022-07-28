@@ -36,3 +36,9 @@ oc label node -l env env-
 
 # Recursive mode on  oc explain
 oc explain  deployment.spec --recursive
+
+# Taint
+oc adm taint node <node> key1-
+
+# Patch
+oc patch routes bitnami -p '{"spec":{"host":"teste"}}'
