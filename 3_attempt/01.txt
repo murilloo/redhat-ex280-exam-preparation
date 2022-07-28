@@ -21,7 +21,9 @@ oc create route passthrough linginx --service linginx2 --port 8443
 # NodeSelector with Annotation
 oc annotate namespace <NS> openshift.io/node-selector="test" --overwrite
 
-# Resource quota per container
-oc create deploy bitnami --image=bitnami/nginx --replicas=3
-oc set resources deployment bitnami -c=nginx --requests cpu=10m,memory=10Mi --limits cpu=100m,memory=120Mi
+# Pod scheduling / Limit resource usage
+oc scale deploy nginx --replicas=5
+oc autoscale deploy nginx --min 1 --max 5 --cpu-percent 70
+oc set resources deploy nginx --requests cpu=10m,memory=20Mi --limits cpu=80m,memory=100Mi
+oc set resources deploy nginx -c=nginx --requests cpu=10m,memory=10Mi --limits cpu=100m,memory=120Mi
 
