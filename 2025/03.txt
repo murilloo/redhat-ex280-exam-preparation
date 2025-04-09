@@ -1,0 +1,20 @@
+# Bootstrap project
+oc adm create-bootstrap-project-template -o yaml > project.yml
+
+# Edit the template
+# Limits --> Nodes --> Working with Cluster --> Limit Range
+
+# Apply template
+oc create -f project.yml -n openshift-config
+
+# Check the apply
+oc get pods -n openshift-apiserver
+
+# Apply to cluster level
+oc edit projects.cluster.openshift.io/cluster
+
+# Add to spec
+spec:
+  projectRequestTemplate:
+    name: project-request
+

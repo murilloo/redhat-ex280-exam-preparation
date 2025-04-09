@@ -1,0 +1,17 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-test-to-web
+  namespace: web
+spec:
+  podSelector: {} # Apply to all pods in the "web" namespace
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: test # Label of the "test" namespace
+      ports:
+        - protocol: TCP
+          port: 80 # Replace with the appropriate port(s) for your application
+  policyTypes:
+    - Ingress

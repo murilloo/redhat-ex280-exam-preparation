@@ -1,0 +1,43 @@
+# Create the users
+
+# htpasswd already installed
+
+# First creates the file "passwd" with "-c"
+htpasswd -c -b -B passwd admin pass
+
+# Adding others to "passwd" file
+htpasswd -b -B passwd marina pass
+htpasswd -b -B passwd ben pass
+htpasswd -b -B passwd leila pass
+
+# In the exam oc extract secret/htpassw-users
+oc extract secret/test
+oc extract configmap/nginx --to=/tmp
+
+# Create the secret
+oc create secret generic htpass-users --from-file htpasswd=passwd -n openshift-config
+
+# Add admin privilege to admin user
+oc adm policy add-cluster-role-to-user cluster-admin admin
+
+# Generates yaml OAuth
+oc get oauth -o yaml -n openshift-config > oauth.yml
+
+# In the exam, add all after spec (Openshift Docs - Security --> Authentication and Authorization --> Configuring Identity Providers)
+spec:
+  identityProviders:
+  - name: my_htpasswd_provider 
+    mappingMethod: claim 
+    type: HTPasswd
+    htpasswd:
+      fileData:
+        name: htpass-secret
+
+# Add admin
+# Replace config
+oc replace -f oauth.yml -n openshift-config
+
+# Check for pod to restart
+oc get clusteroperators.config.openshift.io -n openshift-apiserver authentication
+
+
