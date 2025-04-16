@@ -21,9 +21,9 @@ spec:
   identityProviders:
   - htpasswd:
       fileData:
-        name: htpasswd-ex280
+        name: htpass-ex280
     mappingMethod: claim
-    name: developer
+    name: htpass-identity-ex280
     type: HTPasswd
   templates:
     login:
